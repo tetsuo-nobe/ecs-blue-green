@@ -4,8 +4,12 @@
 
 このプロジェクトは、Amazon ECS の Blue/Green デプロイメントを検証します。
 
-- **myweb1** — Blue Page（背景色：青、フォント色：白）
-- **myweb2** — Green Page（背景色：緑、フォント色：白）
+* フォルダ構成
+
+- **lambda** — Blue/Green デプロイ時の検証に使用する Lambda 関数のサンプルコード 
+- **myweb1** — Blue Page（背景色：青、フォント色：白）を表示するコンテナイメージ構築用
+- **myweb2** — Green Page（背景色：緑、フォント色：白）を表示するコンテナイメージ構築用
+- **ecs-infrastructure.yaml** — Amazon ECS クラスター環境を構築する CloudFormation テンプレート
 
 ## 前提条件
 
