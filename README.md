@@ -2,7 +2,7 @@
 
 ## 概要
 
-このプロジェクトは、Amazon ECS の Blue/Green デプロイメントを検証します。
+このプロジェクトは、Amazon ECS の Blue/Green デプロイメント (CodeDeploy を使用しない ECS 組み込み）を検証します。
 
 * フォルダ構成
 
