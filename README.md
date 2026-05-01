@@ -4,6 +4,8 @@
 
 このプロジェクトは、Amazon ECS の Blue/Green デプロイメント (CodeDeploy を使用しない ECS 組み込み）を検証します。
 
+![](images/overview.png)
+
 * フォルダ構成
 
 - **lambda** — Blue/Green デプロイ時の検証に使用する Lambda 関数のサンプルコード 
@@ -111,6 +113,9 @@ aws cloudformation describe-stacks --stack-name ecs-blue-green --query "Stacks[0
 
 取得した DNS 名にブラウザでアクセスすると、Blue Page が表示されます。
 
+![](images/blue.png)
+
+
 ## ライフサイクルフックによるロールバック検証
 
 テンプレートには、デプロイの POST_SCALE_UP ステージで Lambda 関数を呼び出すライフサイクルフックが設定されています。
@@ -191,6 +196,8 @@ aws ecs describe-services --cluster ECS-VPC --services myweb-service --query "se
 Bake Time（5分）の間は Blue と Green の両方が稼働しており、問題があればロールバック可能です。Bake Time 経過後、Blue 環境が終了しデプロイが完了します。
 
 ALB の DNS 名にアクセスすると Green Page が表示されます。
+
+![](images/green.png)
 
 ### 18. スタックの削除（不要になった場合）
 
