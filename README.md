@@ -161,7 +161,7 @@ POST_SCALE_UP ステージで Lambda が `FAILED` を返し、ECS が自動的�
 
 AWS マネジメントコンソール で ECS サービスのページのデプロイタブを選択するとロールバックの情報を確認できます。
 
-![](images/rollback.png)
+![](images/console.png)
 
 ロールバック後、ALB の DNS 名にアクセスすると引き続き Blue Page が表示されます。
 
