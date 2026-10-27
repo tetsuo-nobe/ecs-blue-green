@@ -208,7 +208,14 @@ ALB の DNS 名にアクセスすると Green Page が表示されます。
 
 ![](images/green.png)
 
-### 18. スタックの削除（不要になった場合）
+
+### 18. Amazon ECR リポジトリの削除（不要になった場合）
+
+```bash
+aws ecr delete-repository --repository-name myweb --region $AWS_REGION --force
+```
+
+### 19. スタックの削除（不要になった場合）
 
 ```bash
 aws cloudformation delete-stack --stack-name ecs-blue-green --region $AWS_REGION
