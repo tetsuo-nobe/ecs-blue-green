@@ -44,6 +44,11 @@ aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --
 
 ### 4. Docker イメージのビルド
 
+
+```bash
+git clone https://github.com/tetsuo-nobe/ecs-blue-green.git
+```
+
 ```bash
 docker build -t myweb myweb1/
 ```
