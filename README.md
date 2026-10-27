@@ -50,7 +50,7 @@ git clone https://github.com/tetsuo-nobe/ecs-blue-green.git
 ```
 
 ```bash
-cd  ecs-blue-green.git
+cd ecs-blue-green/
 ```
 
 ```bash
