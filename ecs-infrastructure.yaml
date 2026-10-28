@@ -16,7 +16,7 @@ Parameters:
   BakeTimeInMinutes:
     Type: Number
     Description: Blue/Green デプロイ後の Bake Time（分）。この期間中に問題があればロールバック可能
-    Default: 5
+    Default: 2
     MinValue: 0
 
 Conditions:
@@ -234,14 +234,14 @@ Resources:
           Value: myweb-alb
 
   # ============================================================
-  # [Blue/Green] ターゲットグループ - Blue（本番用）
+  # [Blue/Green] ターゲットグループ 1（初期状態の本番用）
   # Blue/Green デプロイでは 2 つのターゲットグループが必要
-  # Blue = 現在の本番環境用
+  # 本番用と新バージョン用の役割は、デプロイのたびに 1 と 2 で入れ替わる
   # ============================================================
-  TargetGroupBlue:
+  TargetGroup1:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: myweb-tg-blue
+      Name: myweb-tg-1
       Port: 80
       Protocol: HTTP
       TargetType: ip
@@ -254,13 +254,13 @@ Resources:
       UnhealthyThresholdCount: 3
 
   # ============================================================
-  # [Blue/Green] ターゲットグループ - Green（新バージョン用）
-  # Green = デプロイ時に新しいタスクが登録されるターゲットグループ
+  # [Blue/Green] ターゲットグループ 2（初期状態の新バージョン用）
+  # 最初のデプロイで新しいタスクが登録されるターゲットグループ
   # ============================================================
-  TargetGroupGreen:
+  TargetGroup2:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: myweb-tg-green
+      Name: myweb-tg-2
       Port: 80
       Protocol: HTTP
       TargetType: ip
@@ -274,8 +274,8 @@ Resources:
 
   # ============================================================
   # [Blue/Green] ALB リスナー
-  # ForwardConfig で Blue と Green の両方のターゲットグループを指定
-  # 初期状態では Blue に Weight:1、Green に Weight:0 を設定
+  # ForwardConfig で 2 つのターゲットグループの両方を指定
+  # 初期状態ではターゲットグループ 1 に Weight:1、ターゲットグループ 2 に Weight:0 を設定
   # ECS が Blue/Green デプロイ時にこの Weight を自動的に切り替える
   # ============================================================
   ALBListener:
@@ -288,9 +288,9 @@ Resources:
         - Type: forward
           ForwardConfig:
             TargetGroups:
-              - TargetGroupArn: !Ref TargetGroupBlue
+              - TargetGroupArn: !Ref TargetGroup1
                 Weight: 1
-              - TargetGroupArn: !Ref TargetGroupGreen
+              - TargetGroupArn: !Ref TargetGroup2
                 Weight: 0
 
   # ============================================================
@@ -312,9 +312,9 @@ Resources:
         - Type: forward
           ForwardConfig:
             TargetGroups:
-              - TargetGroupArn: !Ref TargetGroupBlue
+              - TargetGroupArn: !Ref TargetGroup1
                 Weight: 1
-              - TargetGroupArn: !Ref TargetGroupGreen
+              - TargetGroupArn: !Ref TargetGroup2
                 Weight: 0
 
   # ============================================================
@@ -553,12 +553,12 @@ Resources:
       LoadBalancers:
         - ContainerName: myweb
           ContainerPort: 80
-          # [Blue/Green] Blue（本番）用ターゲットグループ
-          TargetGroupArn: !Ref TargetGroupBlue
+          # [Blue/Green] 初期状態の本番用ターゲットグループ
+          TargetGroupArn: !Ref TargetGroup1
           # [Blue/Green] advancedConfiguration: Blue/Green デプロイ固有の設定
           AdvancedConfiguration:
-            # [Blue/Green] Green（新バージョン）用ターゲットグループ
-            AlternateTargetGroupArn: !Ref TargetGroupGreen
+            # [Blue/Green] 初期状態の新バージョン用ターゲットグループ（デプロイのたびに役割が入れ替わる）
+            AlternateTargetGroupArn: !Ref TargetGroup2
             # [Blue/Green] ECS がトラフィック切り替えに使用するリスナールール
             ProductionListenerRule: !Ref ALBListenerProdRule
             # [Blue/Green] ECS が ALB を操作するための IAM ロール

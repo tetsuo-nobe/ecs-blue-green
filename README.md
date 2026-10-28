@@ -206,7 +206,7 @@ aws ecs update-service \
 aws ecs describe-services --cluster ECS-VPC --services myweb-service --query "services[0].deployments" --region $AWS_REGION
 ```
 
-Bake Time（5分）の間は Blue と Green の両方が稼働しており、問題があればロールバック可能です。Bake Time 経過後、Blue 環境が終了しデプロイが完了します。
+Bake Time（2分）の間は Blue と Green の両方が稼働しており、問題があればロールバック可能です。Bake Time 経過後、Blue 環境が終了しデプロイが完了します。
 
 ALB の DNS 名にアクセスすると Green Page が表示されます。
 
