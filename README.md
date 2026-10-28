@@ -257,3 +257,49 @@ docker rmi -f $(docker images -q)
 - [Troubleshooting Amazon ECS blue/green deployments](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/troubleshooting-blue-green.html) — トラブルシューティング
 - [Lifecycle hooks for Amazon ECS service deployments](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-lifecycle-hooks.html) — ライフサイクルフックの実装と hookStatus の仕様
 - [Permissions required for Lambda functions in Amazon ECS blue/green deployments](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/blue-green-permissions.html) — ライフサイクルフック用 IAM 権限
+
+---
+
+## 講師用：環境のクリーンアップを一括で行う
+
+`cleanup.sh` を実行すると、このハンズオンで作成したリソースをまとめて削除できます。
+
+### 削除されるリソース
+
+- CloudFormation スタック `ecs-blue-green`（VPC・ALB・ECS クラスター/サービス・Lambda・IAM ロールなど）
+- タスク定義 `myweb-task-blue` / `myweb-task-green` の ACTIVE なリビジョン
+- Lambda のロググループ `/aws/lambda/ecs-deployment-hook`
+- ECR リポジトリ `myweb`（イメージを含む）
+- CloudShell 上の `myweb` のコンテナイメージ
+
+### 実行手順
+
+1. AWS マネジメントコンソールで、ハンズオンを実施したリージョンを選択して CloudShell を起動します。
+2. リージョンを設定します。
+
+   ```bash
+   export AWS_REGION=ap-northeast-1
+   ```
+
+3. リポジトリを取得していない場合は、クローンします。
+
+   ```bash
+   git clone https://github.com/tetsuo-nobe/ecs-blue-green.git
+   ```
+
+4. スクリプトを実行します。
+
+   ```bash
+   cd ~/ecs-blue-green
+   bash cleanup.sh
+   ```
+
+5. 削除対象のアカウント・リージョン・リソースが表示されます。内容を確認し、`yes` と入力します。
+6. 最後に `[INFO] クリーンアップが完了しました` と表示されれば完了です。スタックの削除を待つため、数分かかります。
+
+> [!NOTE]
+> 存在しないリソースはスキップされるため、途中で失敗した場合や受講者が一部を削除済みの場合も、そのまま再実行できます。
+> 確認を省略する場合は、`bash cleanup.sh -y` で実行します。
+
+> [!CAUTION]
+> 削除したリソースは元に戻せません。実行前に、表示されたアカウントとリージョンが正しいことを必ず確認してください。
