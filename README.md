@@ -6,6 +6,17 @@
 
 ![](images/overview.png)
 
+* Blue/Green デプロイの指定箇所
+
+`ecs-infrastructure.yaml` の ECS サービス（`ECSService`）で、次のように指定しています。
+
+```yaml
+DeploymentController:
+  Type: ECS              # CodeDeploy ではなく ECS 自体がデプロイを管理
+DeploymentConfiguration:
+  Strategy: BLUE_GREEN   # ECS 組み込みの Blue/Green デプロイ
+```
+
 * フォルダ構成
 
 - **lambda** — Blue/Green デプロイ時の検証に使用する Lambda 関数のサンプルコード 
